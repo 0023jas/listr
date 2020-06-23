@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="topnav">
+    <p class="username">Hi {{ user.username }}!</p>
+    <p class="logout"><a href="{% url 'logout' %}">logout</a></p>
+</div>
+
+<!--
+<ul>
+    <li>
+        temp todo A
+    </li>
+    <li>
+        temp todo B   
+    </li>
+</ul>-->
+<div class="modalPositioner">
+</div>
+<div class="listBoxes">
+    <div class="todoItemsBox">
+        <h2>To do Items</h2>
+        <ul>
+            {% for todo_item in all_items %}
+            <li class="listItems">
+                <div class="listItemsContentDiv">
+                    <p class="listItemsContent">{{ todo_item.content }}</p>
+                </div>
+                <div class="listItemButtons">
+                    <form action="/deleteTodo/{{todo_item.id}}/" method="post">{% csrf_token %}
+                        <input class="actionBtnLeft" type="submit" value="Delete"/>
+                    </form>
+                    <form action="/moveTodo/{{todo_item.id}}/" method="post">{% csrf_token %}
+                        <input class="actionBtnRight" type="submit" value="Move"/>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="currentlyWorkingBox">
+        <h2>Currently Working On</h2>
+        <ul>
+            {% for CurrentlyWorkingItem in all_CW_items %}
+            <li class="listItems">
+                <div class="listItemsContentDiv">
+                    <p class="listItemsContent">{{ CurrentlyWorkingItem.contentCW }}</p>
+                </div>
+                <div class="listItemButtons">
+                    <form action="/finishTodo/{{CurrentlyWorkingItem.id}}/" method="post">{% csrf_token %}
+                        <input class="actionBtnRight" type="submit" value="Move"/>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="finishedItems">
+        <h2>Finished Items</h2>
+        <ul>
+            {% for FinishedItem in all_f_items %}
+            <li class="listItems">
+                <div class="listItemsContentDiv">
+                    <p class="listItemsContent">{{ FinishedItem.contentDone }}</p>
+                </div>
+                <div class="listItemButtons">
+                    <form action="/deleteTodoFinal/{{FinishedItem.id}}/" method="post">{% csrf_token %}
+                        <input class="actionBtnRight" type="submit" value="Finish"/>
+                    </form>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<button class="modalOpenButton" id="modalOpenButton">+</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <form action="/addTodo/" method="post">{% csrf_token %}
+            <input class="textBox" type="textarea" name="content"/>
+            <input class="submitBtn" type="submit" value="Add"/>
+        </form>
+    </div>
+</div>
+
+<!--When User is not logged in-->
+{% else %}
+<body>
+    <div class="imgBox">
+        <!--
+        <ul class="topnavHP">
+            <li class="topnavHPEntity"><a href="{% url 'login' %}">login</a></li>
+            <li class="topnavHPEntity"><a href="{% url 'signup' %}">Sign-Up</a></li>
+        </ul>-->
+    {% load staticfiles %} <img class="imgGif" src="{% static 'css/source.gif' %}">
+        <h1 class="listrTitle">Listr</h1>
+        <div class="buttonBox">
+            <div class="loginBtn">
+                <a class="lsText" href="{% url 'login' %}">login</a>
+            </div>
+            <div class="signupBtn">
+                <a class="lsText" href="{% url 'signup' %}">Sign-Up</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+
+{% endif %}
+{% endblock %}
+<input type="text" name="content"/>
+<input type="text" name="content"/>
+<input type="text" name="content"/>
